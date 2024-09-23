@@ -227,4 +227,68 @@ select * from worker where worker_id < (select count(worker_id)/2 from worker);
 -- Q40. Write an sql query to fetch the departpents that have less than 4 people in it.
 
 
+select department,count(department) as no_of_department from worker group by  department having no_of_department < 4;
 
+-- Q41. Write an sql query to show  all department along with the number of people in there.
+select department,count(worker_id) from worker group by department; 
+
+-- Q42. Write an sql query to show the last record from a table.
+
+select * from worker where worker_id in (select max(worker_id) from worker);
+
+-- Q43. Write an sql query to show the first record form a table.
+select * from worker where worker_id in (select min(worker_id) from worker);
+
+-- Q44. Write an sql query to fetch the last five records from a table.
+(select * from worker order by worker_id desc limit 5) order by worker_id;
+
+-- 45. Write an sql query to print the name of employees having the highest salary in each department.
+select w.department , w.first_name,w.salary from
+ (select max(salary) as maxsalary ,department from worker group by department) temp
+ inner join worker w on temp.department = w.department and temp.maxsalary = w.salary;
+
+-- 46. Write an sql query to fetch three max salaries from a table.
+
+select * from  (select * from (select * from worker order by salary desc) as temp limit 5) temp2 order by salary asc;
+select * from worker order by salary desc limit 3;
+
+-- imp co-related subquery
+
+select distinct salary from worker w1
+where 3>= (select count(distinct salary) from worker w2 where w1.salary <= w2.salary) order by w1.salary desc;
+
+-- 47. Write an sql query to fetch three min salaries from a table
+
+select * from worker order by salary asc limit 3;
+-- imp co-related subquery
+
+select distinct salary from worker w1
+where 3>= (select count(distinct salary) from worker w2 where w1.salary >= w2.salary) order by w1.salary desc;
+
+-- Q48. Write an sql query to fetch nth max salaries from table.
+
+select distinct salary from worker w1
+where n>= (select count(distinct salary) from worker w2 where w1.salary >= w2.salary) order by w1.salary desc;
+
+
+-- Q49 Write an sql query to fetch departments along with the totla salaries paid for each of them.
+
+select department , sum(salary) from worker group by department;
+
+-- Q50 Write an sql query to fetch the names of worker who earn the hightest salary.
+select * from worker where salary = (select max(salary) from worker );
+
+create table pairs(
+    A int,
+    B int
+);
+insert into pairs values(1,2),(2,4),(2,1),(3,2),(4,2),(5,6),(6,5),(7,8);
+select * from pairs;
+
+-- using joins
+
+select lt.* from pairs lt left join pairs rt on lt.A = rt.B and lt.B = rt.a
+where rt.A is NULL OR lt.A < rt.A;
+
+-- corelated subquery
+select * from pairs p1 where not exists (select * from pairs p2 where p1.B = p2.A and p1.A = p2.B and p1.A > p2.A);
