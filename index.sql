@@ -189,3 +189,42 @@ select worker.worker_id, worker.first_name,worker.last_name,worker.salary ,worke
  
  -- set operation query
  select * from worker left join worker_clone using(worker_id) where worker_clone.worker_id is NULL ;
+
+-- Q31. Write an sql query to show the current date and time;
+select curdate();
+select now();
+select curtime();
+
+-- Q32. Write an sql query to determin the top n (say n = 5) highest salary from a table.
+select * from worker order by salary desc limit 5;
+
+-- Q33. Write an sql query to determine the nth (say n=5) highest salary from a table.
+select * from worker order by salary desc limit 4,1;
+
+-- Q34. Write an sql query to determine the 5th highest salary wihtout using limit keyboard.
+select * from worker w1
+where 4 = (
+    select count(distinct (w2.salary))
+    from worker w2
+    where w2.salary >= w1.salary 
+);
+
+-- Q35. Write an sql query to fetch the list of employees with same salary.
+select * from worker w1, worker w2 where w1.salary = w2.salary;
+
+-- Q36. Write an sql query to show the second highest salary from a table.
+select max(salary) from worker where salary not in (select max(salary) from worker);
+
+-- Q37. Write an sql query to show one row twice in results from a table.
+select * from worker union all select * from worker order by  WORKER_ID;
+
+-- Q38. Write an sql query to list worker_id who does not get bonus.
+select * from worker where worker_id not in (select worker_ref_id from bonus);
+
+-- Q39. Write an sql query to fetch the first 50% records from a table.
+select * from worker where worker_id < (select count(worker_id)/2 from worker);
+
+-- Q40. Write an sql query to fetch the departpents that have less than 4 people in it.
+
+
+
