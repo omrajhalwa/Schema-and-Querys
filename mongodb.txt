@@ -1,0 +1,245 @@
+high performance 
+scalable
+well scaled for wide use case
+unstructered data
+cloud platform
+
+every document possess its own structure
+
+distributed system
+
+collection -record - row
+document - entity - table
+
+
+how mongodb intenally works
+    
+    client <-> mongodb form of json <-> mongodb convert to bson format <-> store in mongodb database;
+
+    -> json
+     javascript object like notation takes inspiration from javascript object
+    -> bson
+    change json data into binary format for storing in underlying architecture of mongodb
+
+
+
+
+-- querys
+
+show databases; //list all the databases
+use database; //create database if not exits
+
+
+db.createCollection('name of collection'); //create new collection;
+
+db.collection.find();// fetch all documents of collection;
+
+db.collection.insertOne({name : 'ashish', age: 30}); // for inserting the one document;
+
+db.collection.insertMany([
+    {
+        name:'govind'
+    },{
+        name:'mohit'
+    },{
+        name:'ashish'
+    }
+]);  // for inserting more than one document
+
+db.collection.findOne(); // gives first document
+
+db.collection.find({name: 'govind'}) // behave as filter
+
+db.romrom.find({_id: ObjectId('6763eb6c29d9e9f871d1399d')}); //filter by id
+
+db.romrom.count() // tell no of collection present into databases;
+
+db.romrom.find().limit(2); // apply limit for get no of docs
+
+
+/* projection in mongodb to want particular key value sometime and sometimes not
+
+db.romrom.find({},{name:1}); // find only name attribute
+
+db.romrom.find({},{name:0}); //everything came except name
+
+*/
+
+//  where in sql
+select * from table where id = 1;
+db.romrom.find({_id : 1},{name:0});
+
+//give docs in form of array can not give for findOne
+db.romrom.find().toArray();
+
+
+//order by asc
+db.romrom.find().sort({name:1});
+
+
+db.romrom.find().sort({name:1, max:1});
+//prcedence name if same then max;
+
+//order by desc
+db.romrom.find().sort({name:-1});
+
+
+//delete one record
+db.romrom.deleteOne({_id:xyz});
+
+// delete more than one
+db.romrom.deleteMany({name:'xyz'});
+
+
+update
+
+set operator
+db.romrom.updateOne({id : 1},{$set : {name : 'govind}});
+
+increment
+db.romrom.updateOne({id : 1},{$inc : {element: 1}});
+
+decrement
+db.romrom.updateOne({id : 1}, {$inc : {element : -1}});
+
+many update
+db.romrom.updateMany({id : 1}, {$inc : {element : -1}});
+
+multiple operator
+db.romrom.updateOne({id : 1}, {$inc : {element : -1}, $set : {name : 'govind'}});
+
+not equal operator
+db.romrom.find({name : {$ne : 'mohit'}});
+
+less than
+db.romrom.find({salary : {$lt : 10000}});
+
+less than equal to
+db.romrom.find({salary : {$lte : 10000}});
+
+greater than
+db.romrom.find({salary : {$gt : 10000}});
+
+greate than equal to
+db.romrom.find({salary : {$gte : 10000}});
+
+both at same time
+
+and operator
+db.romromm.find($and : [{salary : {$gte : 10000}},{salary : {$lte : 50000}}]).count();
+
+in operator
+db.romromm.find($or : [{salary : {$gte : 10000}},{salary : {$lte : 50000}}]).count();
+
+eq operator
+db.romrom.find({salary : {$eq : 10000}});
+
+in operator
+db.romrom.find({name:{$in : ['govind','ashutosh']}});
+
+nin operator
+db.romrom.find({name:{$nin : ['govind','ashutosh']}});
+
+find distinct value in attribute
+db.romrom.distinct('name');
+
+
+
+MONGODB INDEXING
+db.listings.find({rating : 10}).explain('executionStats')
+
+give object having
+{
+    winningPlan: {
+      stage: 'COLLSCAN', //describe linear search
+      filter: { rating: { '$eq': 10 } },
+      direction: 'forward'
+    }
+
+    ,
+     executionStats: {
+    executionSuccess: true,
+    nReturned: 1,
+    executionTimeMillis: 7,
+    totalKeysExamined: 0,
+    totalDocsExamined: 9,
+    executionStages: {
+      stage: 'COLLSCAN',
+      filter: { rating: { '$eq': 10 } },
+      nReturned: 1,
+      executionTimeMillisEstimate: 0,
+      works: 10,
+        advanced: 1,
+      needTime: 8,
+      needYield: 0,
+      saveState: 0,
+      restoreState: 0,
+      isEOF: 1,
+      direction: 'forward',
+      docsExamined: 9 <-------------------------------
+      }
+    }
+
+
+}
+
+-> CREATE INDEXING
+db.listings.createIndex({rating:1});
+
+
+AFTER {
+    winningPlan: {
+      stage: 'FETCH',
+      inputStage: {
+        stage: 'IXSCAN',
+        keyPattern: { rating: 1 },
+        indexName: 'rating_1',
+        isMultiKey: false,
+        multiKeyPaths: { rating: [] },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: { rating: [ '[10, 10]' ] }
+      }
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 1,
+    executionTimeMillis: 0,
+    totalKeysExamined: 1,
+    totalDocsExamined: 1,
+    executionStages: {
+      stage: 'FETCH',
+      nReturned: 1,
+      executionTimeMillisEstimate: 0,
+      works: 2,
+      advanced: 1,
+      needTime: 0,
+      needYield: 0,
+      saveState: 0,
+      restoreState: 0,
+      isEOF: 1,
+      docsExamined: 1, <-----------------------note here docsExamined become less after indexing
+    }
+
+}
+
+-> db.listings.getIndexes();
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { rating: 1 }, name: 'rating_1' }
+]
+
+-> db.listings.createIndex({rating:1} ,{rom:1}); //compound indexing.........
+
+-> PAGINATION
+
+db.listings.find().skip(10).limit(10);
+skipped first 10 record;
+
+
+-> aggregation pipeline just used for group by stuf distinct and count also came into this as aggregation operator;

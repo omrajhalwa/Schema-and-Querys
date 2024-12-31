@@ -1,0 +1,53 @@
+1. shell script
+
+ A shell script is a computer program designed to be run by a Unix shell,
+ a command-line interpreter. The various dialects of shell scripts are 
+ considered to be command languages. Typical operations performed by shell 
+ scripts include file manipulation, program execution, and printing text. 
+ A script which sets up the environment, runs the program, and does any 
+ necessary cleanup or logging,
+
+2. REPL
+ read evalute print loop
+
+3. pwd // current working directory
+
+4. ls // current working directory files we can see by this
+   ls -l //list down permission owner and date of creation
+   ls -lh // work like -l but also give size of file
+   ls -a gives hidden files
+
+5. cd folder_name //move to specified folder
+
+6. cd .. //back to one folder /onedrive/om -> /onedrive
+   cd ../.. jump to folder back
+   cd ~ any directory to home directory
+7. cd ~/onedrive/om path with respect to home directory called absolute path
+
+8. cd /path/folder path from current or root directory called relative path;
+
+9. mkdir folder_name // make new directory
+
+10. touch file_name // use to create new file
+
+11.  cat  file_name // use to read content of file
+
+12.  rm file_name // remove a file
+
+13. rmdir folder_name // to delete a empty folder
+
+14. rm -r folder_name // -r recursivly enable to delete folder as well as content of a folder.
+
+15. rm -rf folder_name // force fully delete to folder as well as content of folder.
+
+16. vim // it is text editor to edit content of file
+    -> vim file name //for enter
+    -> we are in normal mode where we can read and navigate file content
+    -> esc then write shift : + q -> :q to vim termianl to exit 
+    -> press i for insert or make changes (insert mode from normal mode)
+    -> esc then write shift : + wq-> :wq to vim terminal for save and exit 
+    -> esc then write shift : + q! -> :q! to vim termianl to exit without any change if there changes is exit.
+
+17. In normal mode press dd in any line it delete whole line
+
+1:32:00 i stopped here
