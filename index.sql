@@ -220,6 +220,7 @@ select * from worker union all select * from worker order by  WORKER_ID;
 
 -- Q38. Write an sql query to list worker_id who does not get bonus.
 select * from worker where worker_id not in (select worker_ref_id from bonus);
+select * from (select w.* from worker w left join bonus b on b.worker_ref_id = w.worker_id where worker_ref_id is null) order by worker_id desc;
 
 -- Q39. Write an sql query to fetch the first 50% records from a table.
 select * from worker where worker_id < (select count(worker_id)/2 from worker);
@@ -292,3 +293,15 @@ where rt.A is NULL OR lt.A < rt.A;
 
 -- corelated subquery
 select * from pairs p1 where not exists (select * from pairs p2 where p1.B = p2.A and p1.A = p2.B and p1.A > p2.A);
+
+
+--self join
+select * from worker w1 join worker w2  on w1.worker_id = w2.worker_id;
+
+--natural join or cartesian product
+ select * from worker w natural join bonus b;
+
+ -- full join (in mysql)
+ select * from worker w left join bonus b on w.worker_id = b.worker_ref_id
+  union 
+select * form worker w right join bonus b on w.worker_id = b.worker_ref_id;
